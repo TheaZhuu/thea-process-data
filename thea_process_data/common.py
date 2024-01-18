@@ -11,6 +11,8 @@ from config import Config
 from dateutil.relativedelta import relativedelta
 from itertools import repeat
 import re
+import toml
+import logging
 
 #  to do list 
 
@@ -220,4 +222,51 @@ class BaseDataProcessor:
         
         with Pool(4) as date_pool:
             date_pool.map(self.process_date, date_list)
-    
+
+
+
+class Config:
+    def __init__(self, config_file="config.toml"):
+        self.config_file = config_file
+        
+    def read_config(self):
+        default_config = {
+            "aws": {
+                "access_key_id": "default_access_key",
+                "secret_access_key": "default_secret_key"
+            },
+            "variables": {
+                "list": ["100u", "100v", "10u", "10v", "2d", "2t", "sp", "sro", "ssrd", "tcc", "tp"],
+                "list_windspeed": [ "100u", "100v", "10u", "10v", "2d", "2t", "sp", "sro", "ssrd", "tcc", "tp", "100ws", "10ws"]
+            },
+            "cycles": {
+                "list_eps":  ["00", "12"],
+                "list_gefs": ["00", "06", "12", "18"]
+            },
+            "steps": {
+                "list_eps": ["000", "001", "002", "003", "004", "005", "006", "007", "008", "009", "010", "011", "012", "013", "014", "015", "016", "017", "018", "019", "020", "021", "022", "023", "024", "025", "026", "027", "028", "029", "030", "031", "032", "033", "034", "035", "036", "037", "038", "039", "040", "041", "042", "043", "044", "045", "046", "047", "048", "049", "050", "051", "052", "053", "054", "055", "056", "057", "058", "059", "060", "061", "062", "063", "064", "065", "066", "067", "068", "069", "070", "071", "072", "073", "074", "075", "076", "077", "078", "079", "080", "081", "082", "083", "084", "085", "086", "087", "088", "089", "090", "093", "096", "099", "102", "105", "108", "111", "114", "117", "120", "123", "126", "129", "132", "135", "138", "141", "144", "150", "156", "162", "168", "174", "180", "186", "192", "198", "204", "210", "216", "222", "228", "234", "240", "246", "252", "258", "264", "270", "276", "282", "288", "294", "300", "306", "312", "318", "324", "330", "336", "342", "348", "354", "360"],
+                "list_gefs": ['000', '003', '006', '009', '012', '015', '018', '021']
+            },
+            "paths": {
+                "base_path_eps": "s3://prizm-glow/wx-data-intake/eps/",
+                "save_base_path_eps": "/net/airs1/storage/projects/Unet/em_eps",
+                "base_path_gefs":"s3://prizm-glow/wx-data-intake/gefs/",
+                "save_base_path_gefs": "/net/airs1/storage/projects/Unet/gefs_em"
+            },
+            "members":{
+                "eps": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50],
+                "gefs": [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+            },
+            "num_steps":{
+                "eps": "145",
+                "gefs": "105"
+            }
+    }
+        try: 
+            with open(self.config_file, "r") as f:
+                default_config.update(toml.load(f))
+                
+        except FileNotFoundError:
+                logging.error("Config file not found. Using default config.")
+                
+        return default_config  

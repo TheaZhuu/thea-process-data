@@ -1,7 +1,7 @@
 """Main module."""
 import sys
-from config import Config
-from base_data_processor import BaseDataProcessor
+from common import Config,BaseDataProcessor
+
 
 if __name__ == "__main__":
     
