@@ -1,3 +1,3 @@
 # common module
 
-::: thea_process_data.common
+::: thea_process_data.config
