@@ -1,7 +1,7 @@
 """Main module."""
 import sys
-from data_processor import DataProcessor
 from config import Config
+from base_data_processor import BaseDataProcessor
 
 if __name__ == "__main__":
     
@@ -21,6 +21,6 @@ if __name__ == "__main__":
     num_steps_cfg = cfg['num_steps']['gefs']
     num_members = cfg['members']['gefs']
     
-    eps = DataProcessor(base_path_cfg,save_base_path_cfg,cycles_cfg,steps_cfg,num_steps_cfg,num_members)
+    eps = BaseDataProcessor(base_path_cfg,save_base_path_cfg,cycles_cfg,steps_cfg,num_steps_cfg,num_members)
     eps.main(sys.argv[1])
     
